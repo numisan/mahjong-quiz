@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>麻雀点数計算クイズ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="startScreen">
+    <h2>麻雀点数計算クイズ</h2>
+    <p>難易度を選んでください:</p>
+    <button onclick="startQuiz('easy')">初心者</button>
+    <button onclick="startQuiz('medium')">中級者</button>
+    <button onclick="startQuiz('hard')">上級者</button>
+  </div>
+
+  <div id="quizScreen" class="hidden">
+    <h2>問題</h2>
+    <div class="question" id="question"></div>
+    <img id="questionImage" src="" alt="問題画像" />
+    <div class="choices" id="choices"></div>
+    <p id="timer">残り時間: 20秒</p>
+    <div class="explanation" id="explanation"></div>
+    <button onclick="nextQuestion()">次の問題へ</button>
+  </div>
+
+  <div id="endScreen" class="hidden">
+    <h2>クイズ終了！</h2>
+    <p id="result"></p>
+    <button onclick="retryQuiz()">再挑戦</button>
+    <button onclick="returnToStart()">難易度選択に戻る</button>
+  </div>
+
+  <div id="scoreHistory" style="margin-top: 40px;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
