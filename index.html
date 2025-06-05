@@ -2,13 +2,25 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>麻雀点数計算クイズ</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="startScreen">
     <h2>麻雀点数計算クイズ</h2>
-    <p>難易度を選んでください:</p>
+    <div class="notice">
+      <h3>注意事項</h3>
+      <ul>
+        <li><strong>親固定</strong>：常に親の立場で計算されます。子の点数は対応していません。</li>
+        <li>問題文に「リーチ後○巡目」や「他家がリーチしている」などの記述がある場合は、<strong>よく読んでください</strong>。</li>
+        <li><strong>リーチ棒の見逃しは禁止</strong>です。</li>
+        <li><strong>場風の見逃しも禁止</strong>です。翻数に関わる重要な要素です。</li>
+        <li>各難易度で10問ずつ出題されます。</li>
+      </ul>
+    </div>
+    
+    <p>難易度を選んでください</p>
     <button onclick="startQuiz('easy')">初心者</button>
     <button onclick="startQuiz('medium')">中級者</button>
     <button onclick="startQuiz('hard')">上級者</button>
