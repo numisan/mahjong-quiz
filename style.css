@@ -67,7 +67,7 @@ img { width: 100%; height: auto; margin-bottom: 10px; }
   line-height: 1.6;
   white-space: pre-wrap;
 }
-
+  
 
 @media screen and (max-width: 600px) {
   body {
@@ -103,3 +103,5 @@ img { width: 100%; height: auto; margin-bottom: 10px; }
     display: block;
   }
 }
+
+
