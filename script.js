@@ -105,12 +105,12 @@ function showQuestion() {
   const q = quiz[index];
 
   // 前の問題の選択肢の色と無効化をリセット
-  const buttons = document.querySelectorAll("#choices button");
+ /* const buttons = document.querySelectorAll("#choices button");
   buttons.forEach(btn => {
     btn.disabled = false; // ボタンを有効化
     btn.style.backgroundColor = ""; // 背景色をデフォルトに戻す
     btn.innerText = btn.innerText.replace(" ✓", "").replace(" ✗", ""); // 追加された記号を削除
-  });
+  });*/
   const explanationElement = document.getElementById("explanation");
   if (explanationElement) { // ★nullチェックを追加★
     explanationElement.innerText = ""; // 解説をクリア
