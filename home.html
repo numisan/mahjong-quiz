@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ゲームポータル</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6fa;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .games {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: calc(33% - 13.3px);
+      text-align: center;
+      text-decoration: none;
+      color: black;
+      transition: transform 0.2s ease;
+    }
+
+    .game-card:hover {
+      transform: scale(1.03);
+    }
+
+    .game-card img {
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .game-card p {
+      margin: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .game-card {
+        width: calc(50% - 10px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .game-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>おすすめゲームポータル</h1>
+  </header>
+
+  <div class="container">
+    <div class="section-title">今週のピックアップ</div>
+    <div class="games">
+      <a href="index.html" class="game-card">
+        <img src="game1.png" alt="ゲーム1">
+        <p>麻雀クイズ</p>
+      </a>
+      <a href="point.html" class="game-card">
+        <img src="game2.png" alt="ゲーム2">
+        <p>点数管理</p>
+      </a>
+      <a href="https://example.com/game3" class="game-card">
+        <img src="game3.jpg" alt="ゲーム3">
+        <p>脱出ゲーム なごり桜</p>
+      </a>
+      <!-- 必要に応じて追加 -->
+    </div>
+  </div>
+</body>
+</html>
