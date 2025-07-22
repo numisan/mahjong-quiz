@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>麻雀得点管理システム（東風戦）</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap">
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      background-color: #f0f0e8;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    input, select, textarea, button {
+      font-size: 1.2em;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #219150;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: #fff;
+      border: 2px solid #bdc3c7;
+      border-radius: 10px;
+    }
+    .flex {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .player-score input {
+      width: 120px;
+      font-size: 1.1em;
+      padding: 8px;
+    }
+    .history {
+      border-top: 2px solid #ccc;
+      padding-top: 15px;
+      margin-top: 20px;
+    }
+    #currentScores {
+      background: #ecf0f1;
+      padding: 15px;
+      font-size: 1.3em;
+      border: 2px solid #7f8c8d;
+      margin-bottom: 25px;
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>麻雀得点管理（東風戦）</h1>
+
+  <div id="currentScores"></div>
+
+  <div class="section" id="setup">
+    <h2>プレイヤー設定</h2>
+    <input type="text" id="p1" placeholder="プレイヤー1名">
+    <input type="text" id="p2" placeholder="プレイヤー2名">
+    <input type="text" id="p3" placeholder="プレイヤー3名">
+    <input type="text" id="p4" placeholder="プレイヤー4名">
+    <input type="number" id="initialScore" value="25000" placeholder="初期点数">
+    <button onclick="startGame()">ゲーム開始</button>
+  </div>
+
+  <div class="section" id="scoreInput" style="display:none">
+    <h2 id="roundTitle">東1局</h2>
+    <label>上がりプレイヤー:
+      <select id="winner"></select>
+    </label>
+    <label>和了方法:
+      <select id="method">
+        <option value="ツモ">ツモ</option>
+        <option value="ロン">ロン</option>
+      </select>
+    </label>
+    <label>放銃者（ロン時のみ）:
+      <select id="loser">
+        <option value="">なし</option>
+      </select>
+    </label>
+    <label>役（カンマ区切り）:
+      <input type="text" id="yaku" placeholder="例: 立直, 平和, ドラ1">
+    </label>
+    <label>飜:
+      <input type="number" id="han" placeholder="例: 3">
+    </label>
+    <label>符:
+      <input type="number" id="fu" placeholder="例: 30">
+    </label>
+
+    <div class="player-score">
+      <h3>得点変動</h3>
+      <div id="scoreChanges" class="flex"></div>
+    </div>
+
+    <button onclick="recordRound()">この局を記録する</button>
+
+    <div class="history" id="liveHistory"></div>
+  </div>
+
+  <div id="results" class="section" style="display:none">
+    <h2>試合結果</h2>
+    <div id="finalScores"></div>
+    <div class="history" id="history"></div>
+  </div>
+
+  <script>
+    let players = [], scores = {}, round = 1, history = [];
+
+    function updateCurrentScores() {
+      const container = document.getElementById('currentScores');
+      container.innerHTML = '<strong>現在の点数:</strong><br>' +
+        players.map(name => `${name}: ${scores[name]} 点`).join(' | ');
+    }
+
+    function startGame() {
+      players = ["p1", "p2", "p3", "p4"].map(id => document.getElementById(id).value || id);
+      const initial = parseInt(document.getElementById('initialScore').value);
+      players.forEach(name => scores[name] = initial);
+
+      const winnerSelect = document.getElementById('winner');
+      const loserSelect = document.getElementById('loser');
+      const scoreContainer = document.getElementById('scoreChanges');
+
+      [winnerSelect, loserSelect].forEach(select => {
+        select.innerHTML = '';
+        players.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          select.appendChild(opt.cloneNode(true));
+        });
+      });
+
+      scoreContainer.innerHTML = '';
+      players.forEach(name => {
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = name;
+        input.id = `change_${name}`;
+        scoreContainer.appendChild(input);
+      });
+
+      document.getElementById('setup').style.display = 'none';
+      document.getElementById('scoreInput').style.display = 'block';
+      updateRoundTitle();
+      updateCurrentScores();
+    }
+
+    function updateRoundTitle() {
+      document.getElementById('roundTitle').textContent = `東${round}局`;
+    }
+
+    function recordRound() {
+      const winner = document.getElementById('winner').value;
+      const method = document.getElementById('method').value;
+      const loser = method === 'ロン' ? document.getElementById('loser').value : '';
+      const yaku = document.getElementById('yaku').value.split(',').map(s => s.trim());
+      const han = parseInt(document.getElementById('han').value);
+      const fu = parseInt(document.getElementById('fu').value);
+
+      const scoreChanges = {};
+      players.forEach(name => {
+        const delta = parseInt(document.getElementById(`change_${name}`).value) || 0;
+        scores[name] += delta;
+        scoreChanges[name] = delta;
+      });
+
+      const roundData = {
+        round: `東${round}局`,
+        winner, loser, method, yaku, han, fu, scoreChanges
+      };
+      history.push(roundData);
+
+      updateCurrentScores();
+      updateLiveHistory();
+
+      round++;
+      if (round > 4) {
+        endGame();
+        return;
+      }
+
+      updateRoundTitle();
+      players.forEach(name => document.getElementById(`change_${name}`).value = '');
+      document.getElementById('yaku').value = '';
+      document.getElementById('han').value = '';
+      document.getElementById('fu').value = '';
+    }
+
+    function updateLiveHistory() {
+      const live = document.getElementById('liveHistory');
+      live.innerHTML = '<h3>入力済み履歴</h3>' + history.map(r => {
+        return `<div><strong>${r.round}</strong> - ${r.winner} (${r.method}${r.loser ? ' → ' + r.loser : ''}) - ${r.yaku.join(', ')} - 飜:${r.han} 符:${r.fu}</div>`;
+      }).join('');
+    }
+
+    function endGame() {
+      document.getElementById('scoreInput').style.display = 'none';
+      const final = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('finalScores').innerHTML = final.map(
+        ([name, score], i) => `<div>${i+1}位: ${name} (${score}点)</div>`
+      ).join('');
+
+      document.getElementById('history').innerHTML = history.map(r => {
+        return `<div><strong>${r.round}</strong> - ${r.winner} (${r.method}${r.loser ? ' → ' + r.loser : ''}) - ${r.yaku.join(', ')} - 飜:${r.han} 符:${r.fu}</div>`;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

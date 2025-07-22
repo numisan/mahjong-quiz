@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麻雀点数計算クイズ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="startScreen">
+    <h2>麻雀点数計算クイズ</h2>
+    <div class="notice">
+      <h3>注意事項</h3>
+      <ul>
+        <li><strong>親固定</strong>：常に親の立場で計算されます。子の点数は対応していません。</li>
+        <li>問題文に「リーチ後○巡目」や「他家がリーチしている」などの記述がある場合は、<strong>よく読んでください</strong>。</li>
+        <li><strong>リーチ棒の見逃しは禁止</strong>です。</li>
+        <li><strong>場風の見逃しも禁止</strong>です。翻数に関わる重要な要素です。</li>
+        <li>チョンボはマイナス点のものと役無しのものがあります。<strong>選択肢の中で最も正解に近い</strong>ものを選んでください。</li>
+        <li>ドラと書かれているのはドラ表示牌のことです。</li>
+        <li>初心者の問題だけ雀魂での計算方式で、中級者と上級者はMリーグの計算方式です。</li>
+        <li>各難易度で10問ずつ出題されます。</li>
+      </ul>
+    </div>
+    
+    <p>難易度を選んでください</p>
+    <button onclick="startQuiz('easy')">初心者</button>
+    <button onclick="startQuiz('medium')">中級者</button>
+    <button onclick="startQuiz('hard')">上級者</button>
+  </div>
+
+  <div id="quizScreen" class="hidden">
+    <h2>問題</h2>
+    <p id="questionNumber" style="font-weight: bold; margin-bottom: 10px;"></p>
+    <div class="question" id="question"></div>
+    <img id="questionImage" src="" alt="問題画像" />
+    <div class="choices" id="choices"></div>
+    <p id="timer">残り時間: 20秒</p>
+    <div class="explanation" id="explanation"></div>
+    <button onclick="nextQuestion()">次の問題へ</button>
+  </div>
+
+  <div id="endScreen" class="hidden">
+    <h2>クイズ終了！</h2>
+    <p id="result"></p>
+    <button onclick="retryQuiz()">再挑戦</button>
+    <button onclick="returnToStart()">難易度選択に戻る</button>
+  </div>
+
+  <div id="scoreHistory" style="margin-top: 40px;">
+<button id="clearHistoryBtn" onclick="clearScoreHistory()">スコア履歴を削除</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
